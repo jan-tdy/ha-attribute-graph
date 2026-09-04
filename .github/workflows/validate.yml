@@ -25,3 +25,30 @@ jobs:
           node-version: 20
       - run: npm ci
       - run: npm run build
+
+  version-bump:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch base commit
+        run: git fetch --depth=1 origin ${{ github.event.pull_request.base.sha }}
+      - name: Require a version bump
+        run: |
+          git show ${{ github.event.pull_request.base.sha }}:package.json > /tmp/base-package.json
+          BASE_VERSION=$(node -pe "require('/tmp/base-package.json').version")
+          HEAD_VERSION=$(node -pe "require('./package.json').version")
+          echo "base=$BASE_VERSION head=$HEAD_VERSION"
+          if [ "$BASE_VERSION" = "$HEAD_VERSION" ]; then
+            echo "::error file=package.json::package.json version was not bumped (still $HEAD_VERSION). Every PR must bump the version."
+            exit 1
+          fi
+      - name: Require package.json and src/const.js to agree
+        run: |
+          PKG_VERSION=$(node -pe "require('./package.json').version")
+          CONST_VERSION=$(grep -oP '(?<=CARD_VERSION = ")[^"]+' src/const.js)
+          echo "package.json=$PKG_VERSION const.js=$CONST_VERSION"
+          if [ "$PKG_VERSION" != "$CONST_VERSION" ]; then
+            echo "::error file=src/const.js::package.json version ($PKG_VERSION) and src/const.js CARD_VERSION ($CONST_VERSION) are out of sync."
+            exit 1
+          fi

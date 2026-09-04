@@ -96,6 +96,23 @@ class AttributeGraphCardEditor extends LitElement {
     this._updateEntities(entities);
   }
 
+  _renderSelect(label, value, onChange, options) {
+    // Plain <select> instead of ha-select/mwc-list-item: some Home Assistant
+    // frontend versions no longer register mwc-list-item globally, which made
+    // ha-select dropdowns render but not respond to clicks. A native <select>
+    // has no such dependency and always works.
+    return html`
+      <label class="select-field">
+        <span class="select-label">${label}</span>
+        <select .value=${value} @change=${onChange}>
+          ${options.map(
+            ([optValue, optLabel]) => html`<option value=${optValue}>${optLabel}</option>`
+          )}
+        </select>
+      </label>
+    `;
+  }
+
   _toggleExpanded(index) {
     this._expanded = this._expanded === index ? -1 : index;
   }
@@ -195,15 +212,12 @@ class AttributeGraphCardEditor extends LitElement {
                 ></ha-entity-picker>
 
                 <div class="row two-col">
-                  <ha-select
-                    label="Attribute (empty = main state)"
-                    .value=${entry.attribute || ""}
-                    @selected=${(ev) => this._seriesFieldChanged(index, "attribute", { target: { value: ev.target.value, type: "text" } })}
-                    @closed=${(e) => e.stopPropagation()}
-                  >
-                    <mwc-list-item value="">(state)</mwc-list-item>
-                    ${attrs.map((a) => html`<mwc-list-item .value=${a}>${a}</mwc-list-item>`)}
-                  </ha-select>
+                  ${this._renderSelect(
+                    "Attribute (empty = main state)",
+                    entry.attribute || "",
+                    (ev) => this._seriesFieldChanged(index, "attribute", ev),
+                    [["", "(state)"], ...attrs.map((a) => [a, a])]
+                  )}
                   <ha-textfield
                     label="Name (optional)"
                     .value=${entry.name || ""}
@@ -225,24 +239,24 @@ class AttributeGraphCardEditor extends LitElement {
                 </div>
 
                 <div class="row two-col">
-                  <ha-select
-                    label="Y axis"
-                    .value=${entry.y_axis || "primary"}
-                    @selected=${(ev) => this._seriesFieldChanged(index, "y_axis", { target: { value: ev.target.value, type: "text" } })}
-                    @closed=${(e) => e.stopPropagation()}
-                  >
-                    <mwc-list-item value="primary">Primary (left)</mwc-list-item>
-                    <mwc-list-item value="secondary">Secondary (right)</mwc-list-item>
-                  </ha-select>
-                  <ha-select
-                    label="Line style"
-                    .value=${entry.line_type || "linear"}
-                    @selected=${(ev) => this._seriesFieldChanged(index, "line_type", { target: { value: ev.target.value, type: "text" } })}
-                    @closed=${(e) => e.stopPropagation()}
-                  >
-                    <mwc-list-item value="linear">Linear</mwc-list-item>
-                    <mwc-list-item value="step">Step</mwc-list-item>
-                  </ha-select>
+                  ${this._renderSelect(
+                    "Y axis",
+                    entry.y_axis || "primary",
+                    (ev) => this._seriesFieldChanged(index, "y_axis", ev),
+                    [
+                      ["primary", "Primary (left)"],
+                      ["secondary", "Secondary (right)"],
+                    ]
+                  )}
+                  ${this._renderSelect(
+                    "Line style",
+                    entry.line_type || "linear",
+                    (ev) => this._seriesFieldChanged(index, "line_type", ev),
+                    [
+                      ["linear", "Linear"],
+                      ["step", "Step"],
+                    ]
+                  )}
                 </div>
 
                 <ha-formfield
@@ -317,9 +331,30 @@ class AttributeGraphCardEditor extends LitElement {
         gap: 10px;
         padding: 12px;
       }
-      ha-textfield,
-      ha-select {
+      ha-textfield {
         width: 100%;
+      }
+      .select-field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        width: 100%;
+        font-family: inherit;
+      }
+      .select-label {
+        font-size: 12px;
+        color: var(--secondary-text-color);
+      }
+      .select-field select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 8px;
+        border-radius: 4px;
+        border: 1px solid var(--divider-color, rgba(127, 127, 127, 0.5));
+        background: var(--card-background-color, var(--primary-background-color, #fff));
+        color: var(--primary-text-color);
+        font: inherit;
+        font-size: 16px;
       }
     `;
   }

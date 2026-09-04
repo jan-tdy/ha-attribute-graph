@@ -425,7 +425,7 @@ class AttributeGraphCard extends LitElement {
           const val = formatValue(point.v, series.scale.decimals) + (series.scale.unit ? ` ${series.scale.unit}` : "");
           return html`
             <div class="tooltip-row">
-              <span class="dot" style="background:${color}"></span>
+              <span class="marker" style="background:${color}"></span>
               <span class="tooltip-name">${seriesLabel(series.config, this._hass)}</span>
               <span class="tooltip-value">${val}</span>
             </div>
@@ -446,7 +446,7 @@ class AttributeGraphCard extends LitElement {
             : "–";
           return html`
             <div class="legend-item">
-              <span class="dot" style="background:${color}"></span>
+              <span class="marker" style="background:${color}"></span>
               <span class="legend-name">${seriesLabel(s.config, this._hass)}</span>
               <span class="legend-value">${val}</span>
             </div>
@@ -460,6 +460,11 @@ class AttributeGraphCard extends LitElement {
     return css`
       :host {
         display: block;
+        font-family: var(
+          --ha-font-family-body,
+          var(--paper-font-body1_-_font-family, "Roboto", "Noto Sans", sans-serif)
+        );
+        color: var(--primary-text-color);
       }
       .card-content {
         padding: 0 16px 16px;
@@ -489,7 +494,10 @@ class AttributeGraphCard extends LitElement {
       .axis-label {
         fill: var(--secondary-text-color);
         font-size: 10px;
-        font-family: var(--paper-font-common-base_-_font-family, inherit);
+        font-family: var(
+          --ha-font-family-body,
+          var(--paper-font-body1_-_font-family, "Roboto", "Noto Sans", sans-serif)
+        );
         dominant-baseline: middle;
       }
       .axis-label-primary {
@@ -511,9 +519,9 @@ class AttributeGraphCard extends LitElement {
       .legend {
         display: flex;
         flex-wrap: wrap;
-        gap: 4px 16px;
-        margin-top: 8px;
-        font-size: 12px;
+        gap: 6px 16px;
+        margin-top: 12px;
+        font-size: 13px;
         color: var(--primary-text-color);
       }
       .legend-item {
@@ -524,10 +532,10 @@ class AttributeGraphCard extends LitElement {
       .legend-value {
         color: var(--secondary-text-color);
       }
-      .dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
+      .marker {
+        width: 12px;
+        height: 3px;
+        border-radius: 1.5px;
         flex: none;
       }
       .tooltip {

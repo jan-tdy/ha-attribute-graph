@@ -49,6 +49,11 @@ The project intentionally uses a Python-style pre-release version string
 `src/const.js`'s `CARD_VERSION` in sync, and match any git tag the same way
 (`v1.0.0b0`).
 
+**Every PR must bump the version** (e.g. `1.0.0b0` → `1.0.0b1`), in both
+`package.json` and `src/const.js`. This is enforced by the `version-bump` job in
+`.github/workflows/validate.yml`, which fails the PR if `package.json`'s version
+matches the base branch's, or if `package.json` and `src/const.js` disagree.
+
 ## Card architecture
 
 - `attribute-graph-card.js` (the card) owns: config validation/normalization
