@@ -1,7 +1,7 @@
 # Attribute Graph Card
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
-[![version](https://img.shields.io/badge/version-1.0.0b1-blue.svg)](https://github.com/jan-tdy/ha-attribute-graph)
+[![version](https://img.shields.io/badge/version-1.0.0b2-blue.svg)](https://github.com/jan-tdy/ha-attribute-graph)
 
 A Home Assistant Lovelace card that graphs entity **attributes** over time — not just
 the main state. Point it at `light.living_room` and tell it to plot `brightness`, and

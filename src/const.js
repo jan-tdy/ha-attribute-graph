@@ -1,4 +1,4 @@
-export const CARD_VERSION = "1.0.0b1";
+export const CARD_VERSION = "1.0.0b2";
 
 export const DEFAULT_HOURS_TO_SHOW = 24;
 
