@@ -12,7 +12,7 @@ body:
     attributes:
       label: Card version
       description: Shown in the browser console banner, or the version installed via HACS.
-      placeholder: "1.0.0b0"
+      placeholder: "1.0.0b1"
     validations:
       required: true
 

@@ -177,11 +177,19 @@ class AttributeGraphCard extends LitElement {
     const hours = this._config.hours_to_show || DEFAULT_HOURS_TO_SHOW;
     const end = new Date();
     const start = new Date(end.getTime() - hours * 60 * 60 * 1000);
+    // significant_changes_only is a real key=value flag on the history REST
+    // endpoint, so "0" correctly disables it. minimal_response and
+    // no_attributes are NOT value-parsed server-side though — HA's own
+    // frontend only ever appends them bare ("&minimal_response", no value) —
+    // the endpoint just checks whether the key is present in the query
+    // string at all. Including them as `key=0` therefore still counts as
+    // present and turns minimal_response/no_attributes ON, which strips
+    // `attributes` from almost every row and is exactly why attribute-based
+    // series ended up with 0-1 points (an invisible line). Simply omit both
+    // keys to keep them off.
     const params = new URLSearchParams({
       filter_entity_id: entityIds.join(","),
       significant_changes_only: "0",
-      minimal_response: "0",
-      no_attributes: "0",
       end_time: end.toISOString(),
     });
 
@@ -425,7 +433,7 @@ class AttributeGraphCard extends LitElement {
           const val = formatValue(point.v, series.scale.decimals) + (series.scale.unit ? ` ${series.scale.unit}` : "");
           return html`
             <div class="tooltip-row">
-              <span class="dot" style="background:${color}"></span>
+              <span class="marker" style="background:${color}"></span>
               <span class="tooltip-name">${seriesLabel(series.config, this._hass)}</span>
               <span class="tooltip-value">${val}</span>
             </div>
@@ -446,7 +454,7 @@ class AttributeGraphCard extends LitElement {
             : "–";
           return html`
             <div class="legend-item">
-              <span class="dot" style="background:${color}"></span>
+              <span class="marker" style="background:${color}"></span>
               <span class="legend-name">${seriesLabel(s.config, this._hass)}</span>
               <span class="legend-value">${val}</span>
             </div>
@@ -460,6 +468,11 @@ class AttributeGraphCard extends LitElement {
     return css`
       :host {
         display: block;
+        font-family: var(
+          --ha-font-family-body,
+          var(--paper-font-body1_-_font-family, "Roboto", "Noto Sans", sans-serif)
+        );
+        color: var(--primary-text-color);
       }
       .card-content {
         padding: 0 16px 16px;
@@ -489,7 +502,10 @@ class AttributeGraphCard extends LitElement {
       .axis-label {
         fill: var(--secondary-text-color);
         font-size: 10px;
-        font-family: var(--paper-font-common-base_-_font-family, inherit);
+        font-family: var(
+          --ha-font-family-body,
+          var(--paper-font-body1_-_font-family, "Roboto", "Noto Sans", sans-serif)
+        );
         dominant-baseline: middle;
       }
       .axis-label-primary {
@@ -511,9 +527,9 @@ class AttributeGraphCard extends LitElement {
       .legend {
         display: flex;
         flex-wrap: wrap;
-        gap: 4px 16px;
-        margin-top: 8px;
-        font-size: 12px;
+        gap: 6px 16px;
+        margin-top: 12px;
+        font-size: 13px;
         color: var(--primary-text-color);
       }
       .legend-item {
@@ -524,10 +540,10 @@ class AttributeGraphCard extends LitElement {
       .legend-value {
         color: var(--secondary-text-color);
       }
-      .dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
+      .marker {
+        width: 12px;
+        height: 3px;
+        border-radius: 1.5px;
         flex: none;
       }
       .tooltip {

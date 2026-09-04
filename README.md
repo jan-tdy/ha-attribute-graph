@@ -1,7 +1,7 @@
 # Attribute Graph Card
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
-[![version](https://img.shields.io/badge/version-1.0.0b0-blue.svg)](https://github.com/jan-tdy/ha-attribute-graph)
+[![version](https://img.shields.io/badge/version-1.0.0b1-blue.svg)](https://github.com/jan-tdy/ha-attribute-graph)
 
 A Home Assistant Lovelace card that graphs entity **attributes** over time — not just
 the main state. Point it at `light.living_room` and tell it to plot `brightness`, and
@@ -35,9 +35,26 @@ can plot.
 
 ### HACS (recommended)
 
+[![Open your Home Assistant instance and open this repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=jan-tdy&repository=ha-attribute-graph&category=plugin)
+
+Click the badge above — it opens HACS with this repository and the correct
+**Dashboard/Plugin** category already filled in, so there's nothing to pick wrong.
+Confirm the dialog, install **Attribute Graph Card**, then reload the frontend
+(clear cache if needed).
+
+<details>
+<summary>Manual custom-repository steps (if the badge above doesn't work for you)</summary>
+
 1. HACS → Frontend → ⋮ → *Custom repositories*.
-2. Add `https://github.com/jan-tdy/ha-attribute-graph` as category **Dashboard**.
+2. Add `https://github.com/jan-tdy/ha-attribute-graph` and set **Type/Category** to
+   **Dashboard** (older HACS versions call it **Plugin**) — this is a required
+   dropdown in the "Add custom repository" dialog and does **not** default to the
+   right value. If you see `No manifest.json file found`, HACS tried to install this
+   as an **Integration** instead: remove the repository and re-add it with the
+   category explicitly set to Dashboard/Plugin.
 3. Install **Attribute Graph Card** and reload the frontend (clear cache if needed).
+
+</details>
 
 ### Manual
 
