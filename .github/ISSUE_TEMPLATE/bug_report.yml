@@ -1,0 +1,65 @@
+name: Bug report
+description: Something in Attribute Graph Card is not working as expected
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please fill in as much of this as you can.
+
+  - type: input
+    id: card-version
+    attributes:
+      label: Card version
+      description: Shown in the browser console banner, or the version installed via HACS.
+      placeholder: "1.0.0b0"
+    validations:
+      required: true
+
+  - type: input
+    id: ha-version
+    attributes:
+      label: Home Assistant version
+      placeholder: "2024.x.x"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install-method
+    attributes:
+      label: Installation method
+      options:
+        - HACS
+        - Manual
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug, and what you expected instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: card-config
+    attributes:
+      label: Card YAML configuration
+      description: The card config that reproduces the issue (Dashboard → Edit → card → Edit in YAML).
+      render: yaml
+    validations:
+      required: true
+
+  - type: textarea
+    id: console-errors
+    attributes:
+      label: Browser console errors
+      description: Open devtools (F12) → Console, copy any relevant errors/warnings.
+      render: shell
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Screenshots, entity domain/attributes involved, anything else that helps.

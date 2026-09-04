@@ -1,0 +1,30 @@
+name: Feature request
+description: Suggest an idea or enhancement for Attribute Graph Card
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Is this related to something the card can't do today? Describe the use case.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: What would you like the card to do? An example card config is welcome.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other cards, workarounds, or approaches you've tried.
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
