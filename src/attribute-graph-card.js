@@ -225,6 +225,30 @@ class AttributeGraphCard extends LitElement {
         const t = new Date(row.last_changed).getTime();
         points.push({ t, v: applyScale(raw, scale) });
       }
+
+      // An attribute that hasn't changed during the window still has a
+      // real value - the recorder gives us a single "as of start" point
+      // for it, which can't draw a line by itself. Carry the last known
+      // value forward to "now" (preferring the entity's current live
+      // state, since it's more current than a possibly-stale history
+      // row) so unchanging attributes still render as a flat line
+      // instead of nothing.
+      const liveStateObj = this._hass.states[seriesConfig.entity];
+      let endValue;
+      if (liveStateObj) {
+        const liveRaw = extractRawValue(liveStateObj, seriesConfig);
+        if (liveRaw !== undefined) endValue = applyScale(liveRaw, scale);
+      }
+      if (endValue === undefined && points.length) {
+        endValue = points[points.length - 1].v;
+      }
+      if (endValue !== undefined) {
+        const endT = end.getTime();
+        if (!points.length || points[points.length - 1].t < endT) {
+          points.push({ t: endT, v: endValue });
+        }
+      }
+
       return { config: seriesConfig, scale, points };
     });
     this.requestUpdate();

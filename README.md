@@ -1,12 +1,27 @@
 # Attribute Graph Card
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
-[![version](https://img.shields.io/badge/version-1.0.0b1-blue.svg)](https://github.com/jan-tdy/ha-attribute-graph)
+[![version](https://img.shields.io/badge/version-1.0.0b2-blue.svg)](https://github.com/jan-tdy/ha-attribute-graph)
+
+> **⚠️ Archived — only works on old Home Assistant versions (pre-2024.8), and only
+> for entities/attributes whose history was actually recorded.**
+>
+> This repository is archived and no longer maintained. Since **Home Assistant
+> 2024.8**, HA's core intentionally stopped recording most `light` attributes
+> (`brightness`, color, etc.) to the recorder database at all, to control database
+> size — see [home-assistant/core#123028](https://github.com/home-assistant/core/issues/123028).
+> There is no configuration option to opt back in. Because this card reads history
+> from the recorder (`history/period`), it **cannot** graph an attribute that was
+> never recorded in the first place — no client-side fix changes that, the data
+> simply doesn't exist in the database. On current Home Assistant, the only working
+> alternative for those attributes is a **template sensor** that mirrors the
+> attribute as its own entity state (states are always recorded, unlike attributes).
+> See [Compatibility](#compatibility) below.
 
 A Home Assistant Lovelace card that graphs entity **attributes** over time — not just
 the main state. Point it at `light.living_room` and tell it to plot `brightness`, and
-it will render a native-looking history graph of that attribute, no template sensors
-or extra recorder configuration required.
+it will render a native-looking history graph of that attribute — **on HA versions
+where the recorder still stores that attribute** (see the warning above).
 
 It deliberately looks and feels like the built-in **History** card (`ha-card`, same
 fonts/colors via the active theme, same kind of legend) — the difference is what it
@@ -14,11 +29,29 @@ can plot.
 
 ![screenshot placeholder](https://via.placeholder.com/700x260?text=Attribute+Graph+Card)
 
+## Compatibility
+
+- Works reliably on **Home Assistant versions before 2024.8**, where the recorder
+  still stored full entity attributes.
+- On **2024.8 and later**, many attributes (most notably `light` attributes like
+  `brightness`, `color_temp_kelvin`, color values) are excluded from the recorder by
+  Home Assistant core itself and will never show up in this card's graphs — this
+  affects the flagship "graph a light's brightness" example throughout this README.
+  Attributes recorder still stores for you (e.g. many `sensor`/`climate` attributes)
+  are unaffected and continue to work.
+- Workaround for excluded attributes: create a
+  [template sensor](https://www.home-assistant.io/integrations/template/) that
+  mirrors the attribute as its own state, then point this card at that sensor's
+  state (no `attribute:` needed) — which defeats the "zero template sensors"
+  premise this card was built around, which is why the project is archived rather
+  than reworked around that limitation.
+
 ## Features
 
-- **Zero template sensors** — reads attribute history straight from the recorder via
-  `history/period`, so `brightness`, `current_temperature`, `color_temp_kelvin`, or any
-  other numeric/boolean attribute can be graphed directly.
+- Reads attribute history straight from the recorder via `history/period` — works
+  for `brightness`, `current_temperature`, `color_temp_kelvin`, or any other
+  numeric/boolean attribute, **as long as Home Assistant's recorder actually stored
+  it** (see [Compatibility](#compatibility)).
 - **Native look & feel** — uses `ha-card` and the active theme's CSS variables, so it
   blends into the dashboard the same way the default history card does.
 - **Multi-attribute layering** — overlay several entities/attributes on the same
