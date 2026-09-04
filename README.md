@@ -35,6 +35,16 @@ can plot.
 
 ### HACS (recommended)
 
+[![Open your Home Assistant instance and open this repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=jan-tdy&repository=ha-attribute-graph&category=plugin)
+
+Click the badge above — it opens HACS with this repository and the correct
+**Dashboard/Plugin** category already filled in, so there's nothing to pick wrong.
+Confirm the dialog, install **Attribute Graph Card**, then reload the frontend
+(clear cache if needed).
+
+<details>
+<summary>Manual custom-repository steps (if the badge above doesn't work for you)</summary>
+
 1. HACS → Frontend → ⋮ → *Custom repositories*.
 2. Add `https://github.com/jan-tdy/ha-attribute-graph` and set **Type/Category** to
    **Dashboard** (older HACS versions call it **Plugin**) — this is a required
@@ -43,6 +53,8 @@ can plot.
    as an **Integration** instead: remove the repository and re-add it with the
    category explicitly set to Dashboard/Plugin.
 3. Install **Attribute Graph Card** and reload the frontend (clear cache if needed).
+
+</details>
 
 ### Manual
 
