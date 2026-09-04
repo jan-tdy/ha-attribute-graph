@@ -1,0 +1,25 @@
+{
+  "name": "ha-attribute-graph",
+  "version": "1.0.0b0",
+  "description": "Home Assistant Lovelace card that graphs entity attributes (e.g. light brightness) over time, styled like the native history card.",
+  "license": "MIT",
+  "type": "module",
+  "author": "jan-tdy",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jan-tdy/ha-attribute-graph.git"
+  },
+  "main": "attribute-graph-card.js",
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c --watch"
+  },
+  "dependencies": {
+    "lit": "^2.8.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.9.6"
+  }
+}
