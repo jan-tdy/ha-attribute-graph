@@ -177,11 +177,19 @@ class AttributeGraphCard extends LitElement {
     const hours = this._config.hours_to_show || DEFAULT_HOURS_TO_SHOW;
     const end = new Date();
     const start = new Date(end.getTime() - hours * 60 * 60 * 1000);
+    // significant_changes_only is a real key=value flag on the history REST
+    // endpoint, so "0" correctly disables it. minimal_response and
+    // no_attributes are NOT value-parsed server-side though — HA's own
+    // frontend only ever appends them bare ("&minimal_response", no value) —
+    // the endpoint just checks whether the key is present in the query
+    // string at all. Including them as `key=0` therefore still counts as
+    // present and turns minimal_response/no_attributes ON, which strips
+    // `attributes` from almost every row and is exactly why attribute-based
+    // series ended up with 0-1 points (an invisible line). Simply omit both
+    // keys to keep them off.
     const params = new URLSearchParams({
       filter_entity_id: entityIds.join(","),
       significant_changes_only: "0",
-      minimal_response: "0",
-      no_attributes: "0",
       end_time: end.toISOString(),
     });
 
